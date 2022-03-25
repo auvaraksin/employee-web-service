@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmployeeService {
-    static Employee[] employees = new Employee[3];
+    static Employee[] employees = new Employee[5];
     static int counter = 0;
 
     public static Employee addEmployee(String firstName, String lastName) {
@@ -13,12 +13,12 @@ public class EmployeeService {
                 if (employees[i] != null) {
                     if (employees[i].getFirstName().equals(firstName) &&
                             employees[i].getLastName().equals(lastName)) {
-                        throw new NullPointerException();
+                        throw new EmployeeExistsException();
                     }
                 }
             }
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIsFullException();
         }
         for (int i = 0; i < employees.length; i++) {
             if (employees[i] == null) {
@@ -39,7 +39,7 @@ public class EmployeeService {
                     counter--;
                     return new Employee(firstName, lastName);
                 }
-            } else throw new NullPointerException();
+            } else throw new EmployeeNotFoundException();
         }
         return new Employee(firstName, lastName);
     }
@@ -50,7 +50,7 @@ public class EmployeeService {
                         employees[i].getLastName().equals(lastName)) {
                     return new Employee(firstName, lastName);
                 }
-            } else throw new NullPointerException();
+            } else throw new EmployeeNotFoundException();
         }
         return new Employee(firstName, lastName);
     }
