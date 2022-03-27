@@ -9,7 +9,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
-        if (counter < employees.length) {
+        if (counter <= employees.length) {
             for (int i = 0; i < employees.length; i++) {
                 if ((employees[i] != null) && isEmployeeExisted(firstName, lastName, employees[i])) {
                     throw new EmployeeExistsException();
