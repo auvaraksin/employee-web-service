@@ -18,14 +18,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             throw new ArrayIsFullException();
         }
-        Employee employee = new Employee(firstName, lastName);
         int i = 0;
         while (employees[i] != null) {
             i++;
         }
-        employees[i] = employee;
+        employees[i] = new Employee(firstName, lastName);
         counter++;
-        return employee;
+        return employees[i];
     }
 
     @Override
