@@ -1,4 +1,4 @@
-package pro.sky.employeewebservice;
+package pro.sky.employeewebservice.data;
 
 import java.util.Objects;
 
