@@ -8,6 +8,7 @@ import pro.sky.employeewebservice.data.Employee;
 import pro.sky.employeewebservice.service.EmployeeService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employee")
@@ -24,13 +25,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/remove")
-    public Employee removeEmployeeFromList(@RequestParam String firstName, @RequestParam String lastName) {
-        return employeeService.removeEmployee(firstName, lastName);
+    public Employee removeEmployeeFromList(@RequestParam String lastName) {
+        return employeeService.removeEmployee(lastName);
     }
 
     @GetMapping("/find")
-    public Employee findEmployeeInList(@RequestParam String firstName, @RequestParam String lastName) {
-        return employeeService.findEmployee(firstName, lastName);
+    public Employee findEmployeeInList(@RequestParam String lastName) {
+        return employeeService.findEmployee(lastName);
     }
 
     @GetMapping("/employeelist")

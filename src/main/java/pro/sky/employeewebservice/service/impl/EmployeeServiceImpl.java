@@ -7,45 +7,43 @@ import pro.sky.employeewebservice.exceptions.EmployeeExistsException;
 import pro.sky.employeewebservice.exceptions.EmployeeNotFoundException;
 import pro.sky.employeewebservice.service.EmployeeService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    List<Employee> employees = new ArrayList<>();
+    Map<String, Employee> employees = new HashMap<>();
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        if (employees.containsKey(lastName)) {
             throw new EmployeeExistsException();
         }
-        employees.add(employee);
+        employees.put(lastName, new Employee(firstName, lastName));
+        return employees.get(lastName);
+    }
+
+    @Override
+    public Employee removeEmployee(String lastName) {
+        if (!employees.containsKey(lastName)) {
+            throw new EmployeeNotFoundException();
+        }
+        Employee employee = employees.get(lastName);
+        employees.remove(lastName);
         return employee;
     }
 
     @Override
-    public Employee removeEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
+    public Employee findEmployee(String lastName) {
+        if (!employees.containsKey(lastName)) {
             throw new EmployeeNotFoundException();
         }
-        employees.remove(employee);
-        return employee;
-    }
-
-    @Override
-    public Employee findEmployee(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (!employees.contains(employee)) {
-            throw new EmployeeNotFoundException();
-        }
-        return employee;
+        return employees.get(lastName);
     }
 
     @Override
     public List<Employee> getEmployeeList() {
-        return employees;
+        List<Employee> employeeList = new ArrayList<>(employees.values());
+        return employeeList;
     }
 
 }
