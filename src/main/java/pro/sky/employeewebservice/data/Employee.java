@@ -3,33 +3,33 @@ package pro.sky.employeewebservice.data;
 import java.util.Objects;
 
 public class Employee {
-    private String firstName;
     private String lastName;
+    private String firstName;
 
-    public Employee(String firstName, String lastName) {
-        this.firstName = firstName;
+    public Employee(String lastName, String firstName) {
         this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     @Override
     public String toString() {
-        return "firstName: " + firstName + ", lastName: " + lastName;
+        return ("lastName: " + lastName + ", firstName: " + firstName);
     }
 
     @Override
@@ -37,11 +37,11 @@ public class Employee {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Employee employee = (Employee) obj;
-        return firstName.equals(employee.firstName) && lastName.equals(employee.lastName);
+        return lastName.equals(employee.lastName) && firstName.equals(employee.firstName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName);
+        return Objects.hash(lastName, firstName);
     }
 }

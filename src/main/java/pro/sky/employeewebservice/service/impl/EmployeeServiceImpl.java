@@ -14,30 +14,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     Map<String, Employee> employees = new HashMap<>();
 
     @Override
-    public Employee addEmployee(String firstName, String lastName) {
-        if (employees.containsKey(lastName)) {
+    public Employee addEmployee(String lastName, String firstName) {
+        String s = lastName + ' ' + firstName;
+        if (employees.containsKey(s)) {
             throw new EmployeeExistsException();
         }
-        employees.put(lastName, new Employee(firstName, lastName));
-        return employees.get(lastName);
+        employees.put(s, new Employee(lastName, firstName));
+        return employees.get(s);
     }
 
     @Override
-    public Employee removeEmployee(String lastName) {
-        if (!employees.containsKey(lastName)) {
+    public Employee removeEmployee(String lastName, String firstName) {
+        String s = lastName + ' ' + firstName;
+        if (!employees.containsKey(s)) {
             throw new EmployeeNotFoundException();
         }
-        Employee employee = employees.get(lastName);
-        employees.remove(lastName);
+        Employee employee = employees.get(s);
+        employees.remove(s);
         return employee;
     }
 
     @Override
-    public Employee findEmployee(String lastName) {
-        if (!employees.containsKey(lastName)) {
+    public Employee findEmployee(String lastName, String firstName) {
+        String s = lastName + ' ' + firstName;
+        if (!employees.containsKey(s)) {
             throw new EmployeeNotFoundException();
         }
-        return employees.get(lastName);
+        return employees.get(s);
     }
 
     @Override
