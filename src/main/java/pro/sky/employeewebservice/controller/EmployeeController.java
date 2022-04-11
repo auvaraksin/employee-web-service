@@ -1,9 +1,6 @@
 package pro.sky.employeewebservice.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pro.sky.employeewebservice.data.Employee;
 import pro.sky.employeewebservice.service.EmployeeService;
 
@@ -20,8 +17,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/add")
-    public Employee addEmployeeToList(@RequestParam String lastName, @RequestParam String firstName) {
-        return employeeService.addEmployee(lastName, firstName);
+    public Employee addEmployeeToList(@RequestParam("lastName") String lastName,
+                                      @RequestParam("firstName") String firstName,
+                                      @RequestParam("department") Integer idDepartment,
+                                      @RequestParam("salary") Integer salaryPerMonth) {
+        return employeeService.addEmployee(lastName, firstName, idDepartment, salaryPerMonth);
     }
 
     @GetMapping("/remove")
@@ -29,7 +29,7 @@ public class EmployeeController {
         return employeeService.removeEmployee(lastName, firstName);
     }
 
-    @GetMapping("/find")
+    @GetMapping("/find-employee")
     public Employee findEmployeeInList(@RequestParam String lastName, @RequestParam String firstName) {
         return employeeService.findEmployee(lastName, firstName);
     }
@@ -38,4 +38,29 @@ public class EmployeeController {
     public List<Employee> printEmployeeList() {
         return employeeService.getEmployeeList();
     }
+
+    @GetMapping("/total-salary-per-month")
+    public String showTotalSumMonthSalary() {
+        return employeeService.calculateTotalSumMonthSalary();
+    }
+
+    @GetMapping("/departments/max-salary")
+    public List<Employee> createListOfEmployeesWithMaxSalaryInDepartment(@RequestParam Integer idDepartment) {
+        return employeeService.findEmployeeWithMaxSalaryInDepartment(idDepartment);
+    }
+
+    @GetMapping("/departments/min-salary")
+    public List<Employee> createListOfEmployeesWithMinSalaryInDepartment(@RequestParam Integer idDepartment) {
+        return employeeService.findEmployeeWithMinSalaryInDepartment(idDepartment);
+    }
+
+    @GetMapping(value = {"/departments/all",  "/departments/all/{idDepartment}"})
+    public List<Employee> createListOfEmployees(@PathVariable(required = false) Integer idDepartment) {
+        if (idDepartment != null) {
+            return employeeService.findAllEmployeesByIdDepartment(idDepartment);
+        } else {
+            return employeeService.sortListOfEmployeesByDepartment();
+        }
+    }
+
 }
