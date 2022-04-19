@@ -1,9 +1,11 @@
 package pro.sky.employeewebservice.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.sky.employeewebservice.data.Employee;
 import pro.sky.employeewebservice.exceptions.EmployeeExistsException;
 import pro.sky.employeewebservice.exceptions.EmployeeNotFoundException;
+import pro.sky.employeewebservice.exceptions.EmployeeWrongNameException;
 import pro.sky.employeewebservice.service.EmployeeService;
 
 import java.util.*;
@@ -15,17 +17,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee addEmployee(String lastName, String firstName, Integer idDepartment, Integer salaryPerMonth) {
-        String s = lastName + ' ' + firstName;
+        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
+            throw new EmployeeWrongNameException();
+        }
+        String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
         if (employees.containsKey(s)) {
             throw new EmployeeExistsException();
         }
-        employees.put(s, new Employee(lastName, firstName, idDepartment, salaryPerMonth));
+        employees.put(s, new Employee(StringUtils.capitalize(lastName), StringUtils.capitalize(firstName), idDepartment, salaryPerMonth));
         return employees.get(s);
     }
 
     @Override
     public Employee removeEmployee(String lastName, String firstName) {
-        String s = lastName + ' ' + firstName;
+        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
+            throw new EmployeeWrongNameException();
+        }
+        String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
         if (!employees.containsKey(s)) {
             throw new EmployeeNotFoundException();
         }
@@ -36,7 +44,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findEmployee(String lastName, String firstName) {
-        String s = lastName + ' ' + firstName;
+        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
+            throw new EmployeeWrongNameException();
+        }
+        String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
         if (!employees.containsKey(s)) {
             throw new EmployeeNotFoundException();
         }
