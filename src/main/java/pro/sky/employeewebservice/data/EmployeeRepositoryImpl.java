@@ -1,19 +1,18 @@
-package pro.sky.employeewebservice.service.impl;
+package pro.sky.employeewebservice.data;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import pro.sky.employeewebservice.data.Employee;
+import org.springframework.stereotype.Repository;
 import pro.sky.employeewebservice.exceptions.EmployeeExistsException;
 import pro.sky.employeewebservice.exceptions.EmployeeNotFoundException;
 import pro.sky.employeewebservice.exceptions.EmployeeWrongNameException;
-import pro.sky.employeewebservice.service.EmployeeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
-public class EmployeeServiceImpl implements EmployeeService {
-    Map<String, Employee> employees = new HashMap<>();
+@Repository
+public class EmployeeRepositoryImpl implements EmployeeRepository {
+
+    private final Map<String, Employee> employees = new HashMap<>();
 
     @Override
     public Employee addEmployee(String lastName, String firstName, Integer idDepartment, Integer salaryPerMonth) {
@@ -70,18 +69,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findEmployeeWithMaxSalaryInDepartment(Integer idDepartment) {
-        Integer maxSalary = employees.values().stream()
-                .filter(e -> e.getIdDepartment().equals(idDepartment))
-                .map(e -> e.getSalaryPerMonth())
-                .max(Integer::compare).get();
-        List<Employee> listOfEmployeesWithMaxSalary = employees.values().stream()
-                .filter(e -> e.getIdDepartment().equals(idDepartment))
-                .filter(e -> e.getSalaryPerMonth().equals(maxSalary)).collect(Collectors.toList());
-        return listOfEmployeesWithMaxSalary;
-    }
-
-    @Override
     public List<Employee> findEmployeeWithMinSalaryInDepartment(Integer idDepartment) {
         Integer minSalary = employees.values().stream()
                 .filter(e -> e.getIdDepartment().equals(idDepartment))
@@ -91,6 +78,18 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .filter(e -> e.getIdDepartment().equals(idDepartment))
                 .filter(e -> e.getSalaryPerMonth().equals(minSalary)).collect(Collectors.toList());
         return listOfEmployeesWithMinSalary;
+    }
+
+    @Override
+    public List<Employee> findEmployeeWithMaxSalaryInDepartment(Integer idDepartment) {
+        Integer maxSalary = employees.values().stream()
+                .filter(e -> e.getIdDepartment().equals(idDepartment))
+                .map(e -> e.getSalaryPerMonth())
+                .max(Integer::compare).get();
+        List<Employee> listOfEmployeesWithMaxSalary = employees.values().stream()
+                .filter(e -> e.getIdDepartment().equals(idDepartment))
+                .filter(e -> e.getSalaryPerMonth().equals(maxSalary)).collect(Collectors.toList());
+        return listOfEmployeesWithMaxSalary;
     }
 
     @Override
