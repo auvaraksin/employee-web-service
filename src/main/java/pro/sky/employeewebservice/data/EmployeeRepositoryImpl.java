@@ -16,26 +16,18 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public Employee addEmployee(String lastName, String firstName, Integer idDepartment, Integer salaryPerMonth) {
-        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
-            throw new EmployeeWrongNameException();
-        }
+        checkEmployeeWrongNameException(lastName, firstName);
         String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
-        if (employees.containsKey(s)) {
-            throw new EmployeeExistsException();
-        }
+        checkEmployeeExistsException(employees, s);
         employees.put(s, new Employee(StringUtils.capitalize(lastName), StringUtils.capitalize(firstName), idDepartment, salaryPerMonth));
         return employees.get(s);
     }
 
     @Override
     public Employee removeEmployee(String lastName, String firstName) {
-        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
-            throw new EmployeeWrongNameException();
-        }
+        checkEmployeeWrongNameException(lastName, firstName);
         String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
-        if (!employees.containsKey(s)) {
-            throw new EmployeeNotFoundException();
-        }
+        checkEmployeeNotFoundException(employees, s);
         Employee employee = employees.get(s);
         employees.remove(s);
         return employee;
@@ -43,13 +35,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public Employee findEmployee(String lastName, String firstName) {
-        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
-            throw new EmployeeWrongNameException();
-        }
+        checkEmployeeWrongNameException(lastName, firstName);
         String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
-        if (!employees.containsKey(s)) {
-            throw new EmployeeNotFoundException();
-        }
+        checkEmployeeNotFoundException(employees, s);
         return employees.get(s);
     }
 
@@ -103,6 +91,27 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     public List<Employee> sortListOfEmployeesByDepartment() {
         return employees.values().stream()
                 .sorted(Comparator.comparing(Employee::getIdDepartment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void checkEmployeeWrongNameException(String lastName, String firstName) {
+        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
+            throw new EmployeeWrongNameException();
+        }
+    }
+
+    @Override
+    public void checkEmployeeExistsException(Map<String, Employee> employees, String s) {
+        if (employees.containsKey(s)) {
+            throw new EmployeeExistsException();
+        }
+    }
+
+    @Override
+    public void checkEmployeeNotFoundException(Map<String, Employee> employees, String s) {
+        if (!employees.containsKey(s)) {
+            throw new EmployeeNotFoundException();
+        }
     }
 
 }

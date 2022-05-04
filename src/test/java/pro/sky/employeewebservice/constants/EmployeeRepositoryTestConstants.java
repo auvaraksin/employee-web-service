@@ -13,7 +13,8 @@ public class EmployeeRepositoryTestConstants {
     public static final Integer DEFAULT_EMPLOYEE_REPOSITORY_IDDEPARTMENT = 1;
     public static final Integer DEFAULT_EMPLOYEE_REPOSITORY_SALARYPERMONTH = 100000;
     public static final String DEFAULT_KEY = DEFAULT_RIGHT_EMPLOYEE_LASTNAME + DEFAULT_RIGHT_EMPLOYEE_FIRSTNAME;
-    public static final Map<String, Employee> DEFAUL_EMPLOYEE_MAP = new HashMap<>((Map.of(
+    public static final String DEFAULT_WRONG_KEY = "FAKE EMPLOYEE";
+    public static final Map<String, Employee> DEFAULT_EMPLOYEE_MAP = new HashMap<>((Map.of(
             DEFAULT_KEY,
             new Employee(
                     DEFAULT_RIGHT_EMPLOYEE_LASTNAME,

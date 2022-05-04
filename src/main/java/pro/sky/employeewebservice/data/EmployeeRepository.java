@@ -1,6 +1,7 @@
 package pro.sky.employeewebservice.data;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EmployeeRepository {
 
@@ -21,4 +22,10 @@ public interface EmployeeRepository {
     List<Employee> findEmployeeWithMinSalaryInDepartment(Integer idDepartment);
 
     List<Employee> sortListOfEmployeesByDepartment();
+
+    void checkEmployeeWrongNameException(String lastName, String firstName);
+
+    void checkEmployeeExistsException(Map<String, Employee> employees, String s);
+
+    void checkEmployeeNotFoundException(Map<String, Employee> employees, String s);
 }
