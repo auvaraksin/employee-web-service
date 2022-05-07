@@ -37,4 +37,10 @@ public class EmployeeRepositoryMethodsTest {
                 () -> mut.checkEmployeeNotFoundException(DEFAULT_EMPLOYEE_MAP, DEFAULT_WRONG_KEY));
     }
 
+    @Test
+    public void shouldThrowNullPointerException() {
+        Assertions.assertThrows(NullPointerException.class,
+                () -> mut.findAllEmployeesByIdDepartment(null));
+    }
+
 }

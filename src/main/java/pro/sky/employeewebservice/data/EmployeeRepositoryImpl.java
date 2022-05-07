@@ -82,9 +82,13 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public List<Employee> findAllEmployeesByIdDepartment(Integer idDepartment) {
-        return employees.values().stream()
-                .filter(e -> e.getIdDepartment().equals(idDepartment))
-                .collect(Collectors.toList());
+        if (idDepartment == null) {
+            throw new NullPointerException("При вызове метода не задан номер отдела");
+        } else {
+            return employees.values().stream()
+                    .filter(e -> e.getIdDepartment().equals(idDepartment))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
