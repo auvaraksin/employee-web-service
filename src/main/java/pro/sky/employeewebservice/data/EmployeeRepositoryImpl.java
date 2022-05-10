@@ -1,42 +1,33 @@
-package pro.sky.employeewebservice.service.impl;
+package pro.sky.employeewebservice.data;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import pro.sky.employeewebservice.data.Employee;
+import org.springframework.stereotype.Repository;
 import pro.sky.employeewebservice.exceptions.EmployeeExistsException;
 import pro.sky.employeewebservice.exceptions.EmployeeNotFoundException;
 import pro.sky.employeewebservice.exceptions.EmployeeWrongNameException;
-import pro.sky.employeewebservice.service.EmployeeService;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
-public class EmployeeServiceImpl implements EmployeeService {
-    Map<String, Employee> employees = new HashMap<>();
+@Repository
+public class EmployeeRepositoryImpl implements EmployeeRepository {
+
+    private final Map<String, Employee> employees = new HashMap<>();
 
     @Override
     public Employee addEmployee(String lastName, String firstName, Integer idDepartment, Integer salaryPerMonth) {
-        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
-            throw new EmployeeWrongNameException();
-        }
+        checkEmployeeWrongNameException(lastName, firstName);
         String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
-        if (employees.containsKey(s)) {
-            throw new EmployeeExistsException();
-        }
+        checkEmployeeExistsException(employees, s);
         employees.put(s, new Employee(StringUtils.capitalize(lastName), StringUtils.capitalize(firstName), idDepartment, salaryPerMonth));
         return employees.get(s);
     }
 
     @Override
     public Employee removeEmployee(String lastName, String firstName) {
-        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
-            throw new EmployeeWrongNameException();
-        }
+        checkEmployeeWrongNameException(lastName, firstName);
         String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
-        if (!employees.containsKey(s)) {
-            throw new EmployeeNotFoundException();
-        }
+        checkEmployeeNotFoundException(employees, s);
         Employee employee = employees.get(s);
         employees.remove(s);
         return employee;
@@ -44,13 +35,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findEmployee(String lastName, String firstName) {
-        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
-            throw new EmployeeWrongNameException();
-        }
+        checkEmployeeWrongNameException(lastName, firstName);
         String s = StringUtils.capitalize(lastName) + ' ' + StringUtils.capitalize(firstName);
-        if (!employees.containsKey(s)) {
-            throw new EmployeeNotFoundException();
-        }
+        checkEmployeeNotFoundException(employees, s);
         return employees.get(s);
     }
 
@@ -70,18 +57,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findEmployeeWithMaxSalaryInDepartment(Integer idDepartment) {
-        Integer maxSalary = employees.values().stream()
-                .filter(e -> e.getIdDepartment().equals(idDepartment))
-                .map(e -> e.getSalaryPerMonth())
-                .max(Integer::compare).get();
-        List<Employee> listOfEmployeesWithMaxSalary = employees.values().stream()
-                .filter(e -> e.getIdDepartment().equals(idDepartment))
-                .filter(e -> e.getSalaryPerMonth().equals(maxSalary)).collect(Collectors.toList());
-        return listOfEmployeesWithMaxSalary;
-    }
-
-    @Override
     public List<Employee> findEmployeeWithMinSalaryInDepartment(Integer idDepartment) {
         Integer minSalary = employees.values().stream()
                 .filter(e -> e.getIdDepartment().equals(idDepartment))
@@ -94,16 +69,53 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findAllEmployeesByIdDepartment(Integer idDepartment) {
-        return employees.values().stream()
+    public List<Employee> findEmployeeWithMaxSalaryInDepartment(Integer idDepartment) {
+        Integer maxSalary = employees.values().stream()
                 .filter(e -> e.getIdDepartment().equals(idDepartment))
-                .collect(Collectors.toList());
+                .map(e -> e.getSalaryPerMonth())
+                .max(Integer::compare).get();
+        List<Employee> listOfEmployeesWithMaxSalary = employees.values().stream()
+                .filter(e -> e.getIdDepartment().equals(idDepartment))
+                .filter(e -> e.getSalaryPerMonth().equals(maxSalary)).collect(Collectors.toList());
+        return listOfEmployeesWithMaxSalary;
+    }
+
+    @Override
+    public List<Employee> findAllEmployeesByIdDepartment(Integer idDepartment) {
+        if (idDepartment == null) {
+            throw new NullPointerException("При вызове метода не задан номер отдела");
+        } else {
+            return employees.values().stream()
+                    .filter(e -> e.getIdDepartment().equals(idDepartment))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
     public List<Employee> sortListOfEmployeesByDepartment() {
         return employees.values().stream()
                 .sorted(Comparator.comparing(Employee::getIdDepartment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void checkEmployeeWrongNameException(String lastName, String firstName) {
+        if ((StringUtils.isAlpha(lastName) != true) || (StringUtils.isAlpha(firstName) != true)) {
+            throw new EmployeeWrongNameException();
+        }
+    }
+
+    @Override
+    public void checkEmployeeExistsException(Map<String, Employee> employees, String s) {
+        if (employees.containsKey(s)) {
+            throw new EmployeeExistsException();
+        }
+    }
+
+    @Override
+    public void checkEmployeeNotFoundException(Map<String, Employee> employees, String s) {
+        if (!employees.containsKey(s)) {
+            throw new EmployeeNotFoundException();
+        }
     }
 
 }

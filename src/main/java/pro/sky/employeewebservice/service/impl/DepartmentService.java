@@ -1,11 +1,10 @@
-package pro.sky.employeewebservice.service;
+package pro.sky.employeewebservice.service.impl;
 
 import pro.sky.employeewebservice.data.Employee;
 
 import java.util.List;
-import java.util.Map;
 
-public interface EmployeeService {
+public interface DepartmentService {
     Employee addEmployee(String lastName, String firstName, Integer idDepartment, Integer salaryPerMonth);
 
     Employee removeEmployee(String lastName, String firstName);
